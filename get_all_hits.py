@@ -24,9 +24,14 @@ def get_all_reviewable_hits(mtc):
         hits.extend(temp_hits)
     return hits
 
+
 if __name__ == '__main__':
   parser = argparse.ArgumentParser(parents=[simpleamt.get_parent_parser()])
+  parser.add_argument('--reviewable', action='store_true', default=False)
   args = parser.parse_args()
   mtc = simpleamt.get_mturk_connection_from_args(args)
-  hits = get_all_reviewable_hits(mtc)
-  print len(hits)
+  hits = get_all_reviewable_hits(mtc) if args.reviewable else mtc.get_all_hits()
+  hitIds = [h.HITId for h in hits]
+  print "Got %i hits" % len(hitIds)
+  for hitId in hitIds:
+    print hitId

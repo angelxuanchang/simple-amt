@@ -72,6 +72,7 @@ def setup_qualifications(hit_properties, mtc):
   Replace some of the human-readable keys from the raw HIT properties
   JSON data structure with boto-specific objects.
   """
+  required_to_preview = True
   qual = Qualifications()
   if 'qualification_id' in hit_properties and 'qualification_comparator' in hit_properties and 'qualification_integer' in hit_properties:
     comparator = hit_properties['qualification_comparator']
@@ -83,23 +84,23 @@ def setup_qualifications(hit_properties, mtc):
         c = 'LessThan'
     else:
         print "The 'qualification comparator' is not one of the designated values ('<', '=', '>')."
-    qual.add(Requirement(hit_properties['qualification_id'], c, int(hit_properties['qualification_integer']), required_to_preview = False));
+    qual.add(Requirement(hit_properties['qualification_id'], c, int(hit_properties['qualification_integer']), required_to_preview = required_to_preview));
     del hit_properties['qualification_id']
     del hit_properties['qualification_comparator']
     del hit_properties['qualification_integer']
   if 'country' in hit_properties:
     qual.add(LocaleRequirement('In',
-      hit_properties['country']))
+      hit_properties['country'], required_to_preview = required_to_preview))
     del hit_properties['country']
 
   if 'hits_approved' in hit_properties:
     qual.add(NumberHitsApprovedRequirement('GreaterThan',
-      hit_properties['hits_approved']))
+      hit_properties['hits_approved'], required_to_preview = required_to_preview))
     del hit_properties['hits_approved']
 
   if 'percent_approved' in hit_properties:
     qual.add(PercentAssignmentsApprovedRequirement('GreaterThan',
-      hit_properties['percent_approved']))
+      hit_properties['percent_approved'], required_to_preview = required_to_preview))
     del hit_properties['percent_approved']
 
   hit_properties['qualifications'] = qual
