@@ -4,7 +4,7 @@
 <form id='results-form' method='post' action='dummy' class='text-center'>
   <input type='hidden' value='' name='assignmentId' id='assignmentId'/>
   <input type='hidden' value='' name='output' id='output'/>
-  <input type='submit' class='btn btn-lg btn-success' id='submit-btn' value='Submit' disabled/>          
+  <input type='submit' class='btn btn-lg btn-success' id='submit-btn' value='Submit' disabled/>
 </form>
 <script>
   var simpleamt = (function() {
@@ -28,6 +28,10 @@
       $('#output').val(JSON.stringify(output));
     }
 
+    function getOutput() {
+      return $('#output').val();
+    }
+
     function isPreview() {
       var assignment_id = getUrlParam('assignmentId');
       if (assignment_id === null) return false;
@@ -36,15 +40,17 @@
 
     function setupSubmit() {
       var submit_to = getUrlParam('turkSubmitTo');
-      $('#results-form').attr('action', submit_to + '/mturk/externalSubmit');                      
+      $('#results-form').attr('action', submit_to + '/mturk/externalSubmit');
       $('#assignmentId').val(getUrlParam('assignmentId'));
     }
 
     return {
       getInput: getInput,
+      getOutput: getOutput,
       setOutput: setOutput,
       isPreview: isPreview,
       setupSubmit: setupSubmit,
+      assignmentId: getUrlParam('assignmentId')
     }
 
   })();
